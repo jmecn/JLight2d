@@ -3,9 +3,9 @@ package net.jmecn.algo;
 import static net.jmecn.FMath.*;
 import static net.jmecn.scene.ShapeSDF.*;
 
-import net.jmecn.RenderTask;
+import net.jmecn.Renderer;
 
-public class BeerLambertColor extends RenderTask {
+public class BeerLambertColor extends Renderer {
 
     class Vec2 {
         float x, y;
@@ -178,11 +178,11 @@ public class BeerLambertColor extends RenderTask {
     
     Color sample(float x, float y) {
         Color sum = BLACK;
-        for (int i = 0; i < N; i++) {
-            float a = TWO_PI * (i + (float)rand() / RAND_MAX) / N;
+        for (int i = 0; i < samples; i++) {
+            float a = TWO_PI * (i + (float)rand() / RAND_MAX) / samples;
             sum = colorAdd(sum, trace(x, y, cosf(a), sinf(a), 0));
         }
-        return colorScale(sum, 1.0f / N);
+        return colorScale(sum, 1.0f / samples);
     }
 
     @Override

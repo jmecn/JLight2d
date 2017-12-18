@@ -2,12 +2,17 @@ package net.jmecn;
 
 import java.util.Random;
 
+/**
+ * Float math
+ * @author yanmaoyuan
+ *
+ */
 public final class FMath {
     
     public final static float TWO_PI = 6.28318530718f;
     public final static float EPSILON = 1e-6f;
     
-    public final static Random r = new Random();
+    public final static Random RAND = new Random();
     public final static int RAND_MAX = 0x7fff;
     
     public static float fabsf(float a) {
@@ -48,6 +53,6 @@ public final class FMath {
     }
     
     public final static float rand() {
-        return r.nextInt(RAND_MAX);
+        return RAND.nextInt(RAND_MAX);
     }
 }

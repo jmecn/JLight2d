@@ -3,11 +3,11 @@ package net.jmecn.algo;
 import static net.jmecn.FMath.*;
 import static net.jmecn.scene.ShapeSDF.*;
 
-import net.jmecn.RenderTask;
+import net.jmecn.Renderer;
 
-public class Base extends RenderTask {
+public class Base extends Renderer {
 
-    float trace(float ox, float oy, float dx, float dy) {
+    protected float trace(float ox, float oy, float dx, float dy) {
         float t = 0.0f;
         for (int i = 0; i < MAX_STEP && t < MAX_DISTANCE; i++) {
             float sd = circleSDF(ox + dx * t, oy + dy * t, 0.5f, 0.5f, 0.1f);
@@ -18,13 +18,13 @@ public class Base extends RenderTask {
         return 0.0f;
     }
 
-    float sample(float x, float y) {
+    protected float sample(float x, float y) {
         float sum = 0.0f;
-        for (int i = 0; i < N; i++) {
-            float a = TWO_PI * rand() / RAND_MAX;
+        for (int i = 0; i < samples; i++) {
+            float a = monteCarloMethod(i);
             sum += trace(x, y, cosf(a), sinf(a));
         }
-        return sum / N;
+        return sum / samples;
     }
 
     @Override
