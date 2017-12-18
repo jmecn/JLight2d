@@ -28,12 +28,13 @@ public class Base extends Renderer {
     }
 
     @Override
-    public void run() {
+    public Void call() {
         int p = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++, p += 3) {
                 components[p] = components[p+1] = components[p+2] = (byte)(fminf(sample((float)x / width, (float)y / height) * 255.0f, 255.0f));
             }
         }
+        return null;
     }
 }

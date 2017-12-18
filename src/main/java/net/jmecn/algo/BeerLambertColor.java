@@ -186,7 +186,7 @@ public class BeerLambertColor extends Renderer {
     }
 
     @Override
-    public void run() {
+    public Void call() {
         int p = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++, p += 3) {
@@ -196,5 +196,6 @@ public class BeerLambertColor extends Renderer {
                 components[p+2] = (byte)(fminf(c.b * 255.0f, 255.0f));
             }
         }
+        return null;
     }
 }

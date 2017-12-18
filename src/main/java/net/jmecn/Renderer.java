@@ -4,6 +4,8 @@ import static net.jmecn.FMath.RAND_MAX;
 import static net.jmecn.FMath.TWO_PI;
 import static net.jmecn.FMath.rand;
 
+import java.util.concurrent.Callable;
+
 import net.jmecn.scene.Scene2D;
 
 /**
@@ -11,7 +13,7 @@ import net.jmecn.scene.Scene2D;
  * @author yanmaoyuan
  *
  */
-public abstract class Renderer implements Runnable {
+public abstract class Renderer implements Callable<Void> {
     
     public enum SampleMethod {
         Uniform,

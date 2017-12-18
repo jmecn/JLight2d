@@ -7,6 +7,9 @@ import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.swing.JFrame;
 
@@ -37,6 +40,8 @@ public class Main {
      * Render task
      */
     private Renderer task = new BeerLambert();
+    private ExecutorService threadPool = Executors.newSingleThreadExecutor();
+    private Future<Void> future;
     
     // Title
     protected String title = "Light2D";
@@ -56,8 +61,6 @@ public class Main {
     private Canvas canvas;
     private BufferStrategy bufferStrategy;
     
-    private boolean isRunning;
-
     public Main() {
     }
 
@@ -72,9 +75,8 @@ public class Main {
         
         task.setRenderTarget(renderTarget);
         task.setScene(scene);
-        new Thread(task).start();
+        future = threadPool.submit(task);
         
-        isRunning = true;
         runLoop();
     }
     
@@ -127,13 +129,17 @@ public class Main {
      * Display the render target on canvas
      */
     private void runLoop() {
-        while (isRunning) {
+        while (future != null && !future.isDone()) {
             try {
                 Thread.sleep(64);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             swapBuffer();
+            
+            if (future.isCancelled()) {
+                break;
+            }
         }
     }
     
@@ -165,7 +171,7 @@ public class Main {
      * stop loop
      */
     public void stop() {
-        isRunning = false;
+        threadPool.shutdown();
     }
 
     /**
