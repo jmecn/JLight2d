@@ -1,16 +1,12 @@
-package net.jmecn.algo;
+package net.jmecn.renderer;
 
 import static net.jmecn.FMath.*;
 import static net.jmecn.scene.ShapeSDF.*;
 
 import net.jmecn.Renderer;
 
-public class BeerLambertColor extends Renderer {
+public class RayTracingWithBeerLambertColor extends Renderer {
 
-    class Vec2 {
-        float x, y;
-    }
-    
     class Color {
         float r, g, b;
         
@@ -80,18 +76,18 @@ public class BeerLambertColor extends Renderer {
         return unionOp(a, b);
     }
 
-    void gradient(float x, float y, Vec2 n) {
+    void gradient(float x, float y, Vector2f n) {
         n.x = (scene(x + EPSILON, y).sd - scene(x - EPSILON, y).sd) * (0.5f / EPSILON);
         n.y = (scene(x, y + EPSILON).sd - scene(x, y - EPSILON).sd) * (0.5f / EPSILON);
     }
 
-    void reflect(float ix, float iy, float nx, float ny, Vec2 r) {
+    void reflect(float ix, float iy, float nx, float ny, Vector2f r) {
         float idotn2 = (ix * nx + iy * ny) * 2.0f;
         r.x = ix - idotn2 * nx;
         r.y = iy - idotn2 * ny;
     }
     
-    boolean refract(float ix, float iy, float nx, float ny, float eta, Vec2 r) {
+    boolean refract(float ix, float iy, float nx, float ny, float eta, Vector2f r) {
         float idotn = ix * nx + iy * ny;
         float k = 1.0f - eta * eta * (1.0f - idotn * idotn);
         if (k < 0.0f)
@@ -132,7 +128,7 @@ public class BeerLambertColor extends Renderer {
                 if (depth < MAX_DEPTH && (r.reflectivity > 0.0f || r.eta > 0.0f)) {
                     float nx, ny, rx, ry, refl = r.reflectivity;;
                     
-                    Vec2 normal = new Vec2();
+                    Vector2f normal = new Vector2f();
                     gradient(x, y, normal);
                     
                     // normalize
@@ -144,7 +140,7 @@ public class BeerLambertColor extends Renderer {
                     ny = normal.y * sign * s;
                     
                     if (r.eta > 0.0f) {
-                        Vec2 refraction = new Vec2();
+                        Vector2f refraction = new Vector2f();
                         if (refract(dx, dy, nx, ny, sign < 0.0f ? r.eta : 1.0f / r.eta, refraction)) {
                             rx = refraction.x;
                             ry = refraction.y;
@@ -160,7 +156,7 @@ public class BeerLambertColor extends Renderer {
                         }
                     }
                     if (refl > 0.0f) {
-                        Vec2 reflect = new Vec2();
+                        Vector2f reflect = new Vector2f();
                         reflect(dx, dy, nx, ny, reflect);
                         rx = reflect.x;
                         ry = reflect.y;
@@ -174,7 +170,6 @@ public class BeerLambertColor extends Renderer {
         Color black = BLACK;
         return black;
     }
-
     
     Color sample(float x, float y) {
         Color sum = BLACK;

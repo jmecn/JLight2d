@@ -1,21 +1,17 @@
-package net.jmecn.algo;
+package net.jmecn.renderer;
 
 import static net.jmecn.FMath.*;
 
 import net.jmecn.scene.Result;
 
-public class Reflection extends Csg {
+public class RayTracingWithReflection extends RayTracingWithCsg {
 
-    protected class Vec2 {
-        float x, y;
-    }
-    
-    protected void gradient(float x, float y, Vec2 n) {
+    protected void gradient(float x, float y, Vector2f n) {
         n.x = (scene(x + EPSILON, y).sd - scene(x - EPSILON, y).sd) * (0.5f / EPSILON);
         n.y = (scene(x, y + EPSILON).sd - scene(x, y - EPSILON).sd) * (0.5f / EPSILON);
     }
 
-    protected void reflect(float ix, float iy, float nx, float ny, Vec2 r) {
+    protected void reflect(float ix, float iy, float nx, float ny, Vector2f r) {
         float idotn2 = (ix * nx + iy * ny) * 2.0f;
         r.x = ix - idotn2 * nx;
         r.y = iy - idotn2 * ny;
@@ -31,12 +27,12 @@ public class Reflection extends Csg {
                 if (depth < MAX_DEPTH && r.reflectivity > 0.0f) {
                     float nx, ny, rx, ry;
                     
-                    Vec2 normal = new Vec2();
+                    Vector2f normal = new Vector2f();
                     gradient(x, y, normal);
                     nx = normal.x;
                     ny = normal.y;
                     
-                    Vec2 reflect = new Vec2();
+                    Vector2f reflect = new Vector2f();
                     reflect(dx, dy, nx, ny, reflect);
                     rx = reflect.x;
                     ry = reflect.y;

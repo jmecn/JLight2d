@@ -23,10 +23,13 @@ public abstract class Renderer implements Callable<Void> {
     
     public final static float MAX_STEP = 64;
     public final static float MAX_DISTANCE = 5.0f;
-    public final static float BIAS = 1e-4f;
+    public final static float EPSILON = 1e-6f;
+    
     public final static int MAX_DEPTH = 3;
+    public final static float BIAS = 1e-4f;
     
     // Render target
+    private Image renderTarget;
     protected int width;
     protected int height;
     protected byte[] components;
@@ -39,46 +42,6 @@ public abstract class Renderer implements Callable<Void> {
     
     // Sample method
     protected SampleMethod sampleMethod = SampleMethod.Jittered;
-    
-    /**
-     * Set render target
-     * @param renderTarget
-     */
-    public void setRenderTarget(Image renderTarget) {
-        this.width = renderTarget.getWidth();
-        this.height = renderTarget.getHeight();
-        this.components = renderTarget.getComponents();
-    }
-
-    /**
-     * Set scene
-     * @param scene2d
-     */
-    public void setScene(Scene2D scene2d) {
-        this.scene2d = scene2d;
-    }
-    
-    /**
-     * Set samples per pixel
-     * 
-     * @param samples
-     */
-    public void setSamples(int samples) {
-        if (samples > 0) {
-            this.samples = samples;
-        }
-    }
-
-    /**
-     * Set sample method
-     * 
-     * @param sampleMethod
-     */
-    public void setSampleMethod(SampleMethod sampleMethod) {
-        if (sampleMethod != null) {
-            this.sampleMethod = sampleMethod;
-        }
-    }
     
     /**
      * Monte Carlo method
@@ -102,4 +65,62 @@ public abstract class Renderer implements Callable<Void> {
         return a;
     }
     
+    /**
+     * Set render target
+     * @param renderTarget
+     */
+    public void setRenderTarget(Image renderTarget) {
+        this.renderTarget = renderTarget;
+        this.width = renderTarget.getWidth();
+        this.height = renderTarget.getHeight();
+        this.components = renderTarget.getComponents();
+    }
+
+    /**
+     * Get renderTarget
+     * @return
+     */
+    public Image getRenderTarget() {
+        return renderTarget;
+    }
+    
+    /**
+     * Set scene
+     * @param scene2d
+     */
+    public void setScene(Scene2D scene2d) {
+        this.scene2d = scene2d;
+    }
+    
+    /**
+     * Set samples per pixel
+     * 
+     * @param samples
+     */
+    public void setSamples(int samples) {
+        if (samples > 0) {
+            this.samples = samples;
+        }
+    }
+    
+    /**
+     * Set sample method
+     * 
+     * @param sampleMethod
+     */
+    public void setSampleMethod(SampleMethod sampleMethod) {
+        if (sampleMethod != null) {
+            this.sampleMethod = sampleMethod;
+        }
+    }
+    
+    @Override
+    public String toString() {
+       return String.format("%s %dx%d %s/%d  %s",
+                getClass().getSimpleName().replace("RayTracingWith", ""),
+                width, height,
+                sampleMethod,
+                samples,
+                scene2d.getClass().getSimpleName());
+    }
 }

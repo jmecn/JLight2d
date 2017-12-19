@@ -1,12 +1,12 @@
-package net.jmecn.algo;
+package net.jmecn.renderer;
 
 import static net.jmecn.FMath.*;
 
 import net.jmecn.scene.Result;
 
-public class Refraction extends Reflection {
+public class RayTracingWithRefraction extends RayTracingWithReflection {
 
-    protected boolean refract(float ix, float iy, float nx, float ny, float eta, Vec2 r) {
+    protected boolean refract(float ix, float iy, float nx, float ny, float eta, Vector2f r) {
         float idotn = ix * nx + iy * ny;
         float k = 1.0f - eta * eta * (1.0f - idotn * idotn);
         if (k < 0.0f)
@@ -29,13 +29,13 @@ public class Refraction extends Reflection {
                 if (depth < MAX_DEPTH && (r.reflectivity > 0.0f || r.eta > 0.0f)) {
                     float nx, ny, rx, ry, refl = r.reflectivity;;
                     
-                    Vec2 normal = new Vec2();
+                    Vector2f normal = new Vector2f();
                     gradient(x, y, normal);
                     nx = normal.x * sign;
                     ny = normal.y * sign;
                     
                     if (r.eta > 0.0f) {
-                        Vec2 refraction = new Vec2();
+                        Vector2f refraction = new Vector2f();
                         if (refract(dx, dy, nx, ny, sign < 0.0f ? r.eta : 1.0f / r.eta, refraction)) {
                             rx = refraction.x;
                             ry = refraction.y;
@@ -45,7 +45,7 @@ public class Refraction extends Reflection {
                         }
                     }
                     if (refl > 0.0f) {
-                        Vec2 reflect = new Vec2();
+                        Vector2f reflect = new Vector2f();
                         reflect(dx, dy, nx, ny, reflect);
                         rx = reflect.x;
                         ry = reflect.y;

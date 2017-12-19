@@ -1,10 +1,10 @@
-package net.jmecn.algo;
+package net.jmecn.renderer;
 
 import static net.jmecn.FMath.*;
 
 import net.jmecn.scene.Result;
 
-public class BeerLambert extends Fresnel {
+public class RayTracingWithBeerLambert extends RayTracingWithFresnel {
 
     protected float beerLambert(float a, float d) {
         return expf(-a * d);
@@ -22,7 +22,7 @@ public class BeerLambert extends Fresnel {
                 if (depth < MAX_DEPTH && (r.reflectivity > 0.0f || r.eta > 0.0f)) {
                     float nx, ny, rx, ry, refl = r.reflectivity;;
                     
-                    Vec2 normal = new Vec2();
+                    Vector2f normal = new Vector2f();
                     gradient(x, y, normal);
                     
                     // normalize
@@ -34,7 +34,7 @@ public class BeerLambert extends Fresnel {
                     ny = normal.y * sign * s;
                     
                     if (r.eta > 0.0f) {
-                        Vec2 refraction = new Vec2();
+                        Vector2f refraction = new Vector2f();
                         if (refract(dx, dy, nx, ny, sign < 0.0f ? r.eta : 1.0f / r.eta, refraction)) {
                             rx = refraction.x;
                             ry = refraction.y;
@@ -50,7 +50,7 @@ public class BeerLambert extends Fresnel {
                         }
                     }
                     if (refl > 0.0f) {
-                        Vec2 reflect = new Vec2();
+                        Vector2f reflect = new Vector2f();
                         reflect(dx, dy, nx, ny, reflect);
                         rx = reflect.x;
                         ry = reflect.y;

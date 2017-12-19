@@ -1,10 +1,8 @@
-package net.jmecn.algo;
-
-import static net.jmecn.FMath.*;
+package net.jmecn.renderer;
 
 import net.jmecn.scene.Result;
 
-public class Fresnel extends Refraction {
+public class RayTracingWithFresnel extends RayTracingWithRefraction {
     
     protected float fresnel(float cosi, float cost, float etai, float etat) {
         float rs = (etat * cosi - etai * cost) / (etat * cosi + etai * cost);
@@ -32,7 +30,7 @@ public class Fresnel extends Refraction {
                 if (depth < MAX_DEPTH && (r.reflectivity > 0.0f || r.eta > 0.0f)) {
                     float nx, ny, rx, ry, refl = r.reflectivity;;
                     
-                    Vec2 normal = new Vec2();
+                    Vector2f normal = new Vector2f();
                     gradient(x, y, normal);
                     
                     // normalize
@@ -44,7 +42,7 @@ public class Fresnel extends Refraction {
                     ny = normal.y * sign * s;
                     
                     if (r.eta > 0.0f) {
-                        Vec2 refraction = new Vec2();
+                        Vector2f refraction = new Vector2f();
                         if (refract(dx, dy, nx, ny, sign < 0.0f ? r.eta : 1.0f / r.eta, refraction)) {
                             rx = refraction.x;
                             ry = refraction.y;
@@ -60,7 +58,7 @@ public class Fresnel extends Refraction {
                         }
                     }
                     if (refl > 0.0f) {
-                        Vec2 reflect = new Vec2();
+                        Vector2f reflect = new Vector2f();
                         reflect(dx, dy, nx, ny, reflect);
                         rx = reflect.x;
                         ry = reflect.y;
