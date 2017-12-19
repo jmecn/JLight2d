@@ -1,6 +1,6 @@
 ## JLight2D
 
-Draw light in Java.
+Light rendering in 2D (Java).
 
 Translate from "Light rendering in 2D" by [miloyip](https://github.com/miloyip/light2d).
 
