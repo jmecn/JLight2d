@@ -3,6 +3,8 @@ package net.jmecn;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -38,6 +40,7 @@ public class Display {
     private BufferStrategy bufferStrategy;
     private BufferedImage displayImage;
     private byte[] displayComponents;
+    Graphics graphics;
     
     // Window
     protected String title;
@@ -83,6 +86,8 @@ public class Display {
      */
     private void runLoop() {
         
+        graphics = bufferStrategy.getDrawGraphics();
+        
         while (future != null && !future.isDone() && !future.isCancelled()) {
             try {
                 Thread.sleep(100);
@@ -93,6 +98,7 @@ public class Display {
         }
         future = null;
         
+        graphics.dispose();
     }
     
     /**
@@ -108,9 +114,8 @@ public class Display {
             // red
             displayComponents[i * 3 + 2] = components[i * 3];
         }
-        Graphics graphics = bufferStrategy.getDrawGraphics();
+        
         graphics.drawImage(displayImage, 0, 0, displayImage.getWidth(), displayImage.getHeight(), null);
-        graphics.dispose();
         
         // display
         bufferStrategy.show();
@@ -163,14 +168,14 @@ public class Display {
         frame.pack();
         frame.setVisible(true);
         frame.setLocationRelativeTo(parent);
-//        canvas.requestFocus();
-//
-//        // Locate the frame to screen center.
-//        Dimension size = frame.getSize();
-//        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-//        int x = (screen.width - size.width) / 2;
-//        int y = (screen.height - size.height) / 2;
-//        frame.setLocation(x, y);
+        
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                threadPool.shutdown();
+                future = null;
+            }
+        });
     }
     
 }

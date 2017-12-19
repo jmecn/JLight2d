@@ -61,7 +61,7 @@ public class SettingsDialog implements ActionListener {
         
         frame = new JFrame();
         frame.setContentPane(getContentPanel());
-        frame.setTitle("Light2D");
+        frame.setTitle("Setting - JLight2D");
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
