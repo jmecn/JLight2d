@@ -1,6 +1,6 @@
 package net.jmecn.scene;
 
-import static net.jmecn.FMath.*;
+import static net.jmecn.math.FMath.*;
 
 /**
  * Use SDF(signed distance function) to define 2d Shapes.

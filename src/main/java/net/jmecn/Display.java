@@ -3,7 +3,6 @@ package net.jmecn;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -44,11 +43,14 @@ public class Display {
     protected String title;
     private JFrame frame;
     
+    private JFrame parent;
+    
     /**
      * Initialize the display window
      * @param renderer
      */
-    public Display(Renderer renderer) {
+    public Display(JFrame parent, Renderer renderer) {
+        this.parent = parent;
         this.renderer = renderer;
         this.title = renderer.toString();
         
@@ -153,21 +155,22 @@ public class Display {
     private void setupWindow() {
         // setup window
         frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setResizable(false);
         frame.setSize(width, height);
         frame.setTitle(title);
         frame.add(canvas);// add canvas
         frame.pack();
         frame.setVisible(true);
-        
-        canvas.requestFocus();
-
-        // Locate the frame to screen center.
-        Dimension size = frame.getSize();
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (screen.width - size.width) / 2;
-        int y = (screen.height - size.height) / 2;
-        frame.setLocation(x, y);
+        frame.setLocationRelativeTo(parent);
+//        canvas.requestFocus();
+//
+//        // Locate the frame to screen center.
+//        Dimension size = frame.getSize();
+//        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+//        int x = (screen.width - size.width) / 2;
+//        int y = (screen.height - size.height) / 2;
+//        frame.setLocation(x, y);
     }
     
 }

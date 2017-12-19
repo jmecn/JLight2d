@@ -1,10 +1,11 @@
 package net.jmecn.renderer;
 
-import static net.jmecn.FMath.*;
+import static net.jmecn.math.FMath.*;
 
 import net.jmecn.Renderer;
+import net.jmecn.math.Color;
 
-public class RayTracingBase extends Renderer {
+public class RayTracing0Base extends Renderer {
 
     /**
      * Calculate the signed distance from a point to a circle border.
@@ -36,18 +37,18 @@ public class RayTracingBase extends Renderer {
      * @param dy Direction Y
      * @return
      */
-    protected float trace(float ox, float oy, float dx, float dy) {
+    protected Color trace(float ox, float oy, float dx, float dy) {
         float t = 0.0f;
         for (int i = 0; i < MAX_STEP && t < MAX_DISTANCE; i++) {
             // signed distance
             float sd = circleSDF(ox + dx * t, oy + dy * t, 0.5f, 0.5f, 0.1f);
             if (sd < EPSILON)
-                return 2.0f;// emissive
+                return new Color(2.0f);// emissive
             
             // ray marching
             t += sd;
         }
-        return 0.0f;
+        return Color.BLACK;
     }
 
     /**
@@ -57,14 +58,14 @@ public class RayTracingBase extends Renderer {
      * @param y
      * @return
      */
-    protected float sample(float x, float y) {
-        float sum = 0.0f;
+    protected Color sample(float x, float y) {
+        Color sum = new Color(0);
         for (int i = 0; i < samples; i++) {
             float a = monteCarloMethod(i);
             // ray tracing
-            sum += trace(x, y, cosf(a), sinf(a));
+            sum.addLocal( trace(x, y, cosf(a), sinf(a)) );
         }
-        return sum / samples;
+        return sum.multLocal(1f / samples);
     }
 
     @Override
@@ -75,11 +76,11 @@ public class RayTracingBase extends Renderer {
                 float u = (float) x / width;
                 float v = (float) y / height;
                 
-                byte color = (byte)fminf(sample(u, v) * 255.0f, 255.0f);
+                Color c = sample(u, v);
                 
-                components[index] = color;
-                components[index+1] = color;
-                components[index+2] = color;
+                components[index] = (byte)(fminf(c.r * 255.0f, 255.0f));
+                components[index+1] = (byte)(fminf(c.g * 255.0f, 255.0f));
+                components[index+2] = (byte)(fminf(c.b * 255.0f, 255.0f));
                 
                 index += 3;
             }

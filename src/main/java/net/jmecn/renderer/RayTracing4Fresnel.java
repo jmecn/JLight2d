@@ -1,8 +1,10 @@
 package net.jmecn.renderer;
 
+import net.jmecn.math.Color;
+import net.jmecn.math.Vector2f;
 import net.jmecn.scene.Result;
 
-public class RayTracingWithFresnel extends RayTracingWithRefraction {
+public class RayTracing4Fresnel extends RayTracing3Refraction {
     
     protected float fresnel(float cosi, float cost, float etai, float etat) {
         float rs = (etat * cosi - etai * cost) / (etat * cosi + etai * cost);
@@ -19,14 +21,15 @@ public class RayTracingWithFresnel extends RayTracingWithRefraction {
     }
     
     @Override
-    protected float trace(float ox, float oy, float dx, float dy, int depth) {
+    protected Color trace(float ox, float oy, float dx, float dy, int depth) {
         float t = 1e-3f;
         float sign = scene(ox, oy).sd > 0.0f ? 1.0f : -1.0f;
         for (int i = 0; i < MAX_STEP && t < MAX_DISTANCE; i++) {
             float x = ox + dx * t, y = oy + dy * t;
             Result r = scene(x, y);
             if (r.sd * sign < EPSILON) {
-                float sum = r.emissive;
+                // float sum = r.emissive;
+                Color sum = new Color(r.emissive);
                 if (depth < MAX_DEPTH && (r.reflectivity > 0.0f || r.eta > 0.0f)) {
                     float nx, ny, rx, ry, refl = r.reflectivity;;
                     
@@ -49,10 +52,12 @@ public class RayTracingWithFresnel extends RayTracingWithRefraction {
                             
                             float cosi = -(dx * nx + dy * ny);
                             float cost = -(rx * nx + ry * ny);
+                            
                             refl = sign < 0.0f ? fresnel(cosi, cost, r.eta, 1.0f) : fresnel(cosi, cost, 1.0f, r.eta);
                             // refl = sign < 0.0f ? schlick(cosi, cost, r.eta, 1.0f) : schlick(cosi, cost, 1.0f, r.eta);
                             
-                            sum += (1.0f - refl) * trace(x - nx * BIAS, y - ny * BIAS, rx, ry, depth + 1);
+                            // sum += (1.0f - refl) * trace(x - nx * BIAS, y - ny * BIAS, rx, ry, depth + 1);
+                            sum.addLocal( trace(x - nx * BIAS, y - ny * BIAS, rx, ry, depth + 1).multLocal(1.0f - refl) );
                         } else {
                             refl = 1.0f; // Total internal reflection
                         }
@@ -62,14 +67,16 @@ public class RayTracingWithFresnel extends RayTracingWithRefraction {
                         reflect(dx, dy, nx, ny, reflect);
                         rx = reflect.x;
                         ry = reflect.y;
-                        sum += r.reflectivity * trace(x + nx * BIAS, y + ny * BIAS, rx, ry, depth + 1);
+                        // sum += r.reflectivity * trace(x + nx * BIAS, y + ny * BIAS, rx, ry, depth + 1);
+                        sum.addLocal( trace(x + nx * BIAS, y + ny * BIAS, rx, ry, depth + 1).multLocal(r.reflectivity ));
                     }
                 }
                 return sum;
             }
             t += r.sd * sign;
         }
-        return 0.0f;
+        // return 0.0f;
+        return new Color(0.0f);
     }
 
 }

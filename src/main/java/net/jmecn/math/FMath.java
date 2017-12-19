@@ -1,4 +1,4 @@
-package net.jmecn;
+package net.jmecn.math;
 
 import java.util.Random;
 

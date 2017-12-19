@@ -1,8 +1,8 @@
 package net.jmecn;
 
-import static net.jmecn.FMath.RAND_MAX;
-import static net.jmecn.FMath.TWO_PI;
-import static net.jmecn.FMath.rand;
+import static net.jmecn.math.FMath.RAND_MAX;
+import static net.jmecn.math.FMath.TWO_PI;
+import static net.jmecn.math.FMath.rand;
 
 import java.util.concurrent.Callable;
 
@@ -117,7 +117,7 @@ public abstract class Renderer implements Callable<Void> {
     @Override
     public String toString() {
        return String.format("%s %dx%d %s/%d  %s",
-                getClass().getSimpleName().replace("RayTracingWith", ""),
+                getClass().getSimpleName().replace("RayTracing", ""),
                 width, height,
                 sampleMethod,
                 samples,

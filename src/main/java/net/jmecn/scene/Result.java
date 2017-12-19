@@ -1,29 +1,31 @@
 package net.jmecn.scene;
 
+import net.jmecn.math.Color;
+
 public class Result {
     public float sd;
-    public float emissive;
+    public Color emissive;
     public float reflectivity;
     public float eta;
-    public float absorption;
+    public Color absorption;
 
     public Result(float sd) {
-        this(sd, 0f, 0f, 0f, 0f);
+        this(sd, Color.BLACK);
     }
     
-    public Result(float sd, float emissive) {
-        this(sd, emissive, 0f, 0f, 0f);
+    public Result(float sd, Color emissive) {
+        this(sd, emissive, 0f);
     }
     
-    public Result(float sd, float emissive, float reflectivity) {
-        this(sd, emissive, reflectivity, 0f, 0f);
+    public Result(float sd, Color emissive, float reflectivity) {
+        this(sd, emissive, reflectivity, 0f);
     }
     
-    public Result(float sd, float emissive, float reflectivity, float eta) {
-        this(sd, emissive, reflectivity, eta, 0f);
+    public Result(float sd, Color emissive, float reflectivity, float eta) {
+        this(sd, emissive, reflectivity, eta, Color.WHITE);
     }
     
-    public Result(float sd, float emissive, float reflectivity, float eta, float absorption) {
+    public Result(float sd, Color emissive, float reflectivity, float eta, Color absorption) {
         this.sd = sd;
         this.emissive = emissive;
         this.reflectivity = reflectivity;
