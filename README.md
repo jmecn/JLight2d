@@ -82,6 +82,6 @@ Source code : [RayTracing5Absorption.java](https://github.com/jmecn/JLight2d/blo
 
 Applying Beer-Lambert law to simulate absorption of light in medimum.
 
-![](12_Absorption_ConvexLens.png)
+![](screenshots/12_Absorption_ConvexLens.png)
 
-![](13_Absorption_Ngon.png)
+![](screenshots/13_Absorption_Ngon.png)
