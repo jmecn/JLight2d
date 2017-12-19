@@ -6,7 +6,7 @@ Translate from "Light rendering in 2D" by [miloyip](https://github.com/miloyip/l
 
 ### GUI
 
-I made a swing GUI to setting renderer params.
+I made a swing GUI for setting renderer params.
 
 ![](screenshots/00_SettingDialog.png)
 
