@@ -58,7 +58,7 @@ public class RayTracing2Reflection extends RayTracing1Csg {
             // sum += trace(x, y, cosf(a), sinf(a));
             sum.addLocal( trace(x, y, cosf(a), sinf(a), 0) );
         }
-        return sum.multLocal(1f / samples);
+        return sum.multLocal(invSamples);
     }
 
 }

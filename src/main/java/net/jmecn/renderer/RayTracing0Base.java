@@ -8,7 +8,7 @@ import net.jmecn.math.Color;
 public class RayTracing0Base extends Renderer {
 
     /**
-     * Calculate the signed distance from a point to a circle border.
+     * Calculate the signed distance from a point to a circle.
      * 
      * SDF is short of Signed Distance Filed.
      * 
@@ -48,7 +48,7 @@ public class RayTracing0Base extends Renderer {
             // ray marching
             t += sd;
         }
-        return Color.BLACK;
+        return new Color(0.0f);
     }
 
     /**
@@ -65,7 +65,7 @@ public class RayTracing0Base extends Renderer {
             // ray tracing
             sum.addLocal( trace(x, y, cosf(a), sinf(a)) );
         }
-        return sum.multLocal(1f / samples);
+        return sum.multLocal(invSamples);
     }
 
     @Override
@@ -73,10 +73,10 @@ public class RayTracing0Base extends Renderer {
         int index = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                float u = (float) x / width;
-                float v = (float) y / height;
+                float s = (float) x / width;
+                float t = (float) y / height;
                 
-                Color c = sample(u, v);
+                Color c = sample(s, t);
                 
                 components[index] = (byte)(fminf(c.r * 255.0f, 255.0f));
                 components[index+1] = (byte)(fminf(c.g * 255.0f, 255.0f));

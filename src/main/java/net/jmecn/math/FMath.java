@@ -13,6 +13,7 @@ public final class FMath {
     
     public final static Random RAND = new Random();
     public final static int RAND_MAX = 0x7fff;
+    public final static float INV_RAND_MAX = 1f / 0x7fff;
     
     public static float fabsf(float a) {
         return Math.abs(a);

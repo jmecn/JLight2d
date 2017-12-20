@@ -1,6 +1,6 @@
 package net.jmecn;
 
-import static net.jmecn.math.FMath.RAND_MAX;
+import static net.jmecn.math.FMath.INV_RAND_MAX;
 import static net.jmecn.math.FMath.TWO_PI;
 import static net.jmecn.math.FMath.rand;
 
@@ -39,6 +39,7 @@ public abstract class Renderer implements Callable<Void> {
     
     // Samples of each pixel
     protected int samples = 128;
+    protected float invSamples = 1f / 128;
     
     // Sample method
     protected SampleMethod sampleMethod = SampleMethod.Jittered;
@@ -52,13 +53,13 @@ public abstract class Renderer implements Callable<Void> {
         float a = 0;
         switch (sampleMethod) {
             case Uniform:
-                a = TWO_PI * rand() / RAND_MAX;
+                a = TWO_PI * rand() * INV_RAND_MAX;
                 break;
             case Stratified:
-                a = TWO_PI * i / samples;
+                a = TWO_PI * i * invSamples;
                 break;
             case Jittered:
-                a = TWO_PI * ( i + (float)rand() / RAND_MAX) / samples;
+                a = TWO_PI * ( i + (float)rand() * INV_RAND_MAX) * invSamples;
                 break;
         }
         
@@ -100,6 +101,7 @@ public abstract class Renderer implements Callable<Void> {
     public void setSamples(int samples) {
         if (samples > 0) {
             this.samples = samples;
+            this.invSamples = 1f / samples;
         }
     }
     

@@ -22,6 +22,6 @@ public class RayTracing1Csg extends RayTracing0Base {
             // ray marching
             t += r.sd;
         }
-        return Color.BLACK;
+        return new Color(0.0f);
     }
 }
